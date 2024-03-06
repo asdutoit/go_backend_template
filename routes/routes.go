@@ -23,6 +23,7 @@ func SetupRouter() *gin.Engine {
 	authenticated.GET("/user", getUsers)
 	authenticated.POST("/events/:id/register", registerForEvent)
 	authenticated.DELETE("/events/:id/register", cancelRegistration)
+	authenticated.POST("/uploads", uploadFiles)
 
 	return r
 }
