@@ -49,5 +49,5 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           ARCH: ${{ matrix.arch }}
         run: |
-          docker build --no-cache --platform linux/$ARCH -f Section11-Project/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build --no-cache --platform linux/$ARCH -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
