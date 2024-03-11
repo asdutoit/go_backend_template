@@ -44,7 +44,7 @@ jobs:
 
       - name: Get and update git release tag
         id: git-tag
-        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0)
+        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0 || 'latest')
 
       - name: Build, tag, and push image to Amazon ECR
         env:
