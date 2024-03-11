@@ -5,11 +5,6 @@ on:
     branches:
       - main
 
-env:
-  ECR_REGISTRY: <your-ecr-registry>
-  ECR_REPOSITORY: <your-ecr-repository>
-  AWS_REGION: <your-aws-region>
-
 jobs:
   build-and-push-to-ecr:
     strategy:
