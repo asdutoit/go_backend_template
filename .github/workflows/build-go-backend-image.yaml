@@ -46,7 +46,8 @@ jobs:
 
       - name: Get and update git release tag
         id: git-tag
-        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0 || 'latest')
+        run: echo "tag=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+        # run: echo ::set-output name=tag::$(git describe --tags --abbrev=0 || 'latest')
 
       - name: Print the tag
         run: echo ${{ steps.git-tag.outputs.tag }}
