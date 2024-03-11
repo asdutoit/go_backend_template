@@ -42,11 +42,15 @@ jobs:
         with:
           go-version: 1.21
 
+      - name: Get and update git release tag
+        id: git-tag
+        run: echo ::set-output name=tag::$(git describe --tags --abbrev=0)
+
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: go-backend
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ steps.git-tag.outputs.tag }}
           ARCH: ${{ matrix.arch }}
         run: |
           docker build --no-cache --platform linux/$ARCH -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$ARCH-$IMAGE_TAG .
