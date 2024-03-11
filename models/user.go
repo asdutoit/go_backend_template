@@ -17,15 +17,7 @@ type User struct {
 func (u *User) Save() error {
 	query := `
 	INSERT INTO users(username, email, password) 
-	VALUES (?, ?, ?)`
-
-	stmt, err := db.DB.Prepare(query)
-
-	if err != nil {
-		return err
-	}
-
-	defer stmt.Close()
+	VALUES ($1, $2, $3) RETURNING id`
 
 	hashedPassword, err := utils.HashPassword(u.Password)
 
@@ -33,21 +25,19 @@ func (u *User) Save() error {
 		return err
 	}
 
-	result, err := stmt.Exec(u.Username, u.Email, hashedPassword)
+	err = db.DB.QueryRow(query, u.Username, u.Email, hashedPassword).Scan(&u.ID)
 	if err != nil {
 		return err
 	}
 
-	userId, err := result.LastInsertId()
-	u.ID = userId
-	return err
+	return nil
 }
 
 func GetUserByEmail(email string) (*User, error) {
 	query := `
 	SELECT id, username, email, password
 	FROM users
-	WHERE email = ?`
+	WHERE email = $1`
 
 	row := db.DB.QueryRow(query, email)
 

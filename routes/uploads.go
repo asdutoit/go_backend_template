@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -12,8 +13,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// This function will handle the file uploads and will only work if the AWS environment variables are set:
+// AWS_S3_BUCKET, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, and AWS_REGION
+
 func uploadFiles(ctx *gin.Context) {
-	region := "af-south-1"
+	region := os.Getenv("AWS_REGION")
 
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
@@ -24,7 +28,7 @@ func uploadFiles(ctx *gin.Context) {
 	}
 	svc := s3.New(sess)
 
-	bucket := "homerunner-nextjs13-template"
+	bucket := os.Getenv("AWS_S3_BUCKET")
 
 	err = ctx.Request.ParseMultipartForm(10 << 20) // 10 MB limit
 	if err != nil {
@@ -40,7 +44,6 @@ func uploadFiles(ctx *gin.Context) {
 	for _, file := range files {
 		// Check if the file is an image, photo, or video
 		contentType := getContentType(file)
-		fmt.Println("Content type:", contentType)
 		if !strings.HasPrefix(contentType, "image/") && !strings.HasPrefix(contentType, "video/") {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Unsupported file type", "filename": file.Filename, "content_type": contentType})
 			return
