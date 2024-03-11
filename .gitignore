@@ -1,0 +1,38 @@
+
+# Compiled files
+*.tfstate
+*.tfstate.backup
+*.tfstate.lock.info
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/terraform.tfvars
+**/terraform.tfvars.json
+
+#private key
+*.pem
+# logs
+*.log
+
+.terraform.lock.hcl
+*.DS_Store
+
+# Directories
+*.terraform/
+.vagrant/
+.terraform/
+
+# Backup files
+*.bak
+
+# Ignored Terraform files
+*gitignore*.tf
+
+# Ignored vscode files
+# .vscode/
+
+# Sentinel runtime directory
+.sentinel
+.idea
+.env
+**/secret.yaml
+**/dockerconfigjson_secret.yaml
