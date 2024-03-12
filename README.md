@@ -16,13 +16,13 @@ These instructions will get you a copy of the project up and running on your loc
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/your-repo-name.git
+git clone https://github.com/asdutoit/go_training.git
 ```
 
 2. Change into the project directory
 
 ```bash
-cd your-repo-name
+cd go_training
 ```
 
 3. Install the dependencies
