@@ -9,15 +9,16 @@ permissions:
   id-token: write
   contents: read
 
-env: DB_HOST=localhost
-  DB_PORT=54320
-  DB_USER=postgres
-  DB_PASSWORD=my_password
-  DB_NAME=postgres
-  AWS_REGION=af-south-1
-  AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
-  AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+env:
+  DB_HOST: localhost
+  DB_PORT: 54320
+  DB_USER: postgres
+  DB_PASSWORD: my_password
+  DB_NAME: postgres
+  AWS_REGION: af-south-1
+  AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   build-and-push-to-ecr:
