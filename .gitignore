@@ -34,5 +34,6 @@
 .sentinel
 .idea
 .env
+.envrc
 **/secret.yaml
 **/dockerconfigjson_secret.yaml
