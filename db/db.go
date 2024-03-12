@@ -11,20 +11,6 @@ import (
 
 var DB *sql.DB
 
-// func InitDB() {
-// 	var err error
-// 	DB, err = sql.Open("sqlite3", "api.db")
-
-// 	if err != nil {
-// 		panic("Could not establish a connection to DB")
-// 	}
-
-// 	DB.SetMaxOpenConns(10)
-// 	DB.SetMaxIdleConns(5)
-
-// 	createTables()
-// }
-
 func InitDB() {
 	var err error
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -34,6 +20,10 @@ func InitDB() {
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NAME"),
 	)
+
+	// if os.Getenv("GO_ENV") == "test" {
+	// 	psqlInfo = "host=%s port=%s user=%s password=%s dbname=%s sslmode=disable"
+	// }
 
 	DB, err = sql.Open("postgres", psqlInfo)
 

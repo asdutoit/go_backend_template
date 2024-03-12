@@ -78,6 +78,20 @@ func GetAllUsers() ([]User, error) {
 	return users, nil
 }
 
+func (u *User) DeleteUser() error {
+	query := `
+	DELETE FROM users
+	WHERE email = $1`
+
+	_, err := db.DB.Exec(query, u.Email)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (u *User) ValidateCredentials() (int64, error) {
 	user, err := GetUserByEmail(u.Email)
 

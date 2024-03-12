@@ -24,7 +24,7 @@ func signUp(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "could not create user", "error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"status": "created", "user": user})
+	ctx.JSON(http.StatusCreated, gin.H{"status": "created"})
 }
 
 func getUsers(ctx *gin.Context) {
@@ -64,5 +64,32 @@ func login(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"token": token})
+}
 
+func deleteUser(ctx *gin.Context) {
+	// Declare the user variable
+	var user models.User
+	// Bind the request body to the user variable
+	err := ctx.ShouldBindJSON(&user)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	_, err = user.ValidateCredentials()
+
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "invalid credentials", "error": err.Error()})
+		return
+	}
+
+	err = user.DeleteUser()
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "could not delete user", "error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "User Deleted Successfully"})
 }
