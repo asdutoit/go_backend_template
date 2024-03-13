@@ -19,6 +19,21 @@ type ResponseToken struct {
 	Token string `json:"token"`
 }
 
+func TestMain(m *testing.M) {
+	checkEnv()
+	os.Setenv("GO_ENV", "test")
+	db.InitDB()
+
+	// Run the tests
+	code := m.Run()
+
+	// Close the database connection
+	db.DB.Close()
+
+	// Exit with the code returned from running the tests
+	os.Exit(code)
+}
+
 func TestHealthCheck(t *testing.T) {
 	// Switch to test mode so you don't get such noisy output
 	gin.SetMode(gin.TestMode)
@@ -42,10 +57,9 @@ func TestHealthCheck(t *testing.T) {
 }
 
 func TestDBInit(t *testing.T) {
-	checkEnv()
-	os.Setenv("GO_ENV", "test")
-	db.InitDB()
 	assert.NotNil(t, db.DB, "Database should be initialized")
+	err := db.DB.Ping()
+	assert.NoError(t, err, "Database should be reachable")
 }
 
 func TestRegisterUser(t *testing.T) {
