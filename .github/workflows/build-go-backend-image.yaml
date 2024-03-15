@@ -65,13 +65,13 @@ jobs:
 
       - name: Start local docker Postgres DB for Go tests
         run: |
-          docker run --name local-psql -v local_psql_data_new:/var/lib/postgresql/data -p 54320:5432 -e POSTGRES_PASSWORD=my_password -d postgres:15.3
+          docker run --name local-psql -v local_psql_data_new:/var/lib/postgresql/data -p 54320:5432 -e POSTGRES_PASSWORD=$DB_PASSWORD -d postgres:15.3
 
       - name: Wait for Postgres to become ready
         run: |
           attempt_counter=0
           max_attempts=10
-          until PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c '\q'; do
+          until PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c '\q'; do
             if [ ${attempt_counter} -eq ${max_attempts} ];then
               echo "Max attempts reached, Postgres is still unavailable - exiting"
               exit 1
