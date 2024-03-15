@@ -19,6 +19,13 @@ type ResponseToken struct {
 	Token string `json:"token"`
 }
 
+const TestUserEmail = "testuser@gmail.com"
+const Username = "testuser"
+const Password = "password"
+const ErrConvertUserToJSON = "Could not convert user data to JSON: %v"
+const ContentType = "Content-Type"
+const ApplicationJSON = "application/json"
+
 func TestMain(m *testing.M) {
 	checkEnv()
 	os.Setenv("GO_ENV", "test")
@@ -69,14 +76,14 @@ func TestRegisterUser(t *testing.T) {
 	// Register a new user
 
 	user := models.User{
-		Username: "testuser",
-		Email:    "testuser@gmail.com",
-		Password: "password",
+		Username: Username,
+		Email:    TestUserEmail,
+		Password: Password,
 	}
 
 	userJSON, err := json.Marshal(&user)
 	if err != nil {
-		t.Fatalf("Could not convert user data to JSON: %v", err)
+		t.Fatalf(ErrConvertUserToJSON, err)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(userJSON))
@@ -84,7 +91,7 @@ func TestRegisterUser(t *testing.T) {
 		t.Fatalf("Could not create request: %v", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(ContentType, ApplicationJSON)
 
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
@@ -97,13 +104,13 @@ func TestLoginUser(t *testing.T) {
 	router := routes.SetupRouter()
 
 	user := models.User{
-		Email:    "testuser@gmail.com",
+		Email:    TestUserEmail,
 		Password: "password",
 	}
 
 	userJSON, err := json.Marshal(&user)
 	if err != nil {
-		t.Fatalf("Could not convert user data to JSON: %v", err)
+		t.Fatalf(ErrConvertUserToJSON, err)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(userJSON))
@@ -111,7 +118,7 @@ func TestLoginUser(t *testing.T) {
 		t.Fatalf("Could not process login request: %v", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(ContentType, ApplicationJSON)
 
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
@@ -124,14 +131,14 @@ func TestDeleteUser(t *testing.T) {
 	router := routes.SetupRouter()
 
 	user := models.User{
-		Username: "testuser",
-		Email:    "testuser@gmail.com",
-		Password: "password",
+		Username: Username,
+		Email:    TestUserEmail,
+		Password: Password,
 	}
 
 	userJSON, err := json.Marshal(&user)
 	if err != nil {
-		t.Fatalf("Could not convert user data to JSON: %v", err)
+		t.Fatalf(ErrConvertUserToJSON, err)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, "/login", bytes.NewBuffer(userJSON))
@@ -139,7 +146,7 @@ func TestDeleteUser(t *testing.T) {
 		t.Fatalf("Could not process login request: %v", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(ContentType, ApplicationJSON)
 
 	resp := httptest.NewRecorder()
 	router.ServeHTTP(resp, req)
@@ -157,7 +164,7 @@ func TestDeleteUser(t *testing.T) {
 		t.Fatalf("Could not process delete request: %v", err)
 	}
 
-	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set(ContentType, ApplicationJSON)
 	req.Header.Set("Authorization", token)
 
 	resp = httptest.NewRecorder()

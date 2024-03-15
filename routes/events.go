@@ -10,6 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const InvalidEventID = "invalid event id"
+
 func getEvents(ctx *gin.Context) {
 	events, err := models.GetAllEvents()
 
@@ -44,7 +46,7 @@ func getEvent(ctx *gin.Context) {
 	eventId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid event id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": InvalidEventID})
 		return
 	}
 
@@ -62,7 +64,7 @@ func updateEvent(ctx *gin.Context) {
 	eventId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid event id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": InvalidEventID})
 		return
 	}
 
@@ -116,7 +118,7 @@ func deleteEvent(ctx *gin.Context) {
 	eventId, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid event id"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": InvalidEventID})
 		return
 	}
 
