@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Sonarqube Code Analysis and Review
     runs-on: ubuntu-latest
     permissions: read-all
     steps:
