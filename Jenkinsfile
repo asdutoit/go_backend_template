@@ -5,8 +5,8 @@ pipeline {
       steps {
         def attachments = [
           [
-            text: 'I find your lack of faith disturbing!',
-            fallback: 'Hey, Vader seems to be mad at you.',
+            text: 'This is a test message',
+            fallback: 'Fallback message',
             color: '#ff0000'
           ]
         ]
