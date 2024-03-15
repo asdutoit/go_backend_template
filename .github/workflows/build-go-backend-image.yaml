@@ -67,6 +67,18 @@ jobs:
         run: |
           docker run --name local-psql -v local_psql_data_new:/var/lib/postgresql/data -p 54320:5432 -e POSTGRES_PASSWORD=my_password -d postgres:15.3
 
+      - name: Wait for Postgres to become ready
+        run: |
+          until PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c '\q'; do
+            echo "Postgres is unavailable - sleeping"
+            sleep 1
+          done
+        env:
+          DB_HOST: localhost
+          DB_USER: postgres
+          DB_PASSWORD: my_password
+          DB_NAME: postgres
+
       - name: Run Go tests
         run: go test -v
 

@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "https://sonarqube.dev.spandigital.io",
+    "projectKey": "asdutoit_go_training_01c5cd5d-effa-4246-8ad8-750f4b557ce3"
+  }
+}
