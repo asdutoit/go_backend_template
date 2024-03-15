@@ -69,15 +69,19 @@ jobs:
 
       - name: Wait for Postgres to become ready
         run: |
+          attempt_counter=0
+          max_attempts=10
           until PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_USER -d $DB_NAME -c '\q'; do
-            echo "Postgres is unavailable - sleeping"
+            if [ ${attempt_counter} -eq ${max_attempts} ];then
+              echo "Max attempts reached, Postgres is still unavailable - exiting"
+              exit 1
+            fi
+
+            attempt_counter=$(($attempt_counter+1))
+
+            echo "Postgres is unavailable - attempt $attempt_counter/$max_attempts, sleeping"
             sleep 1
           done
-        env:
-          DB_HOST: localhost
-          DB_USER: postgres
-          DB_PASSWORD: my_password
-          DB_NAME: postgres
 
       - name: Run Go tests
         run: go test -v
