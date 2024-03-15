@@ -9,7 +9,7 @@
 ################################################################################
 # Create a stage for building the application.
 ARG GO_VERSION=1.21.5
-FROM --platform=$BUILDPLATFORM golang:${GO_VERSION} AS build
+FROM --platform="$BUILDPLATFORM" golang:${GO_VERSION} AS build
 WORKDIR /src
 
 # Download dependencies as a separate step to take advantage of Docker's caching.
@@ -44,7 +44,7 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 # most recent version of that image when you build your Dockerfile. If
 # reproducability is important, consider using a versioned tag
 # (e.g., alpine:3.17.2) or SHA (e.g., alpine@sha256:c41ab5c992deb4fe7e5da09f67a8804a46bd0592bfdf0b1847dde0e0889d2bff).
-FROM alpine:latest AS final
+FROM alpine:3.19.1 AS final
 
 # Install any runtime dependencies that are needed to run your application.
 # Leverage a cache mount to /var/cache/apk/ to speed up subsequent builds.
@@ -53,7 +53,8 @@ RUN --mount=type=cache,target=/var/cache/apk \
         ca-certificates \
         tzdata \
         && \
-        update-ca-certificates
+        update-ca-certificates && \
+        rm -rf /var/cache/apk/*
 
 # Create a non-privileged user that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/

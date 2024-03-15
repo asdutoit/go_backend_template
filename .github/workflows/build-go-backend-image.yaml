@@ -83,6 +83,8 @@ jobs:
             sleep 1
           done
 
+          echo "Successfully connected to Postgres"
+
       - name: Run Go tests
         run: go test -v
 
