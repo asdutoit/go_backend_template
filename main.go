@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -26,6 +27,7 @@ func checkEnv() {
 		if os.Getenv(envVar) == "" {
 			missingVars = append(missingVars, envVar)
 		}
+		fmt.Println(os.Getenv(envVar))
 	}
 	if len(missingVars) > 0 {
 		log.Fatalf("Missing environment variables: %v", missingVars)
