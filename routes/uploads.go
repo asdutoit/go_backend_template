@@ -40,6 +40,9 @@ func uploadFiles(ctx *gin.Context) {
 	form := ctx.Request.MultipartForm
 	files := form.File["files"]
 
+	fmt.Println("Uploading", len(files), "files")
+	fmt.Println("Uploading files", files)
+
 	// Iterate over the files and save them
 	for _, file := range files {
 		// Check if the file is an image, photo, or video
@@ -49,6 +52,7 @@ func uploadFiles(ctx *gin.Context) {
 			return
 		}
 
+		fmt.Println("Uploading file:", file.Filename)
 		// Open the file
 		src, err := file.Open()
 		if err != nil {
@@ -102,7 +106,7 @@ func getContentType(file *multipart.FileHeader) string {
 func uploadToAWS(svc *s3.S3, bucket, key string, file multipart.File) error {
 	_, err := svc.PutObject(&s3.PutObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(key),
+		Key:    aws.String("images/" + key),
 		Body:   file,
 	})
 	if err != nil {

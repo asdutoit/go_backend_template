@@ -3,8 +3,8 @@ package routes
 import (
 	"net/http"
 
-	"github.com/asdutoit/gotraining/section11/models"
-	"github.com/asdutoit/gotraining/section11/utils"
+	"github.com/asdutoit/go_backend_template/models"
+	"github.com/asdutoit/go_backend_template/utils"
 	"github.com/gin-gonic/gin"
 )
 

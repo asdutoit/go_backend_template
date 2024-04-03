@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/asdutoit/gotraining/section11/models"
+	"github.com/asdutoit/go_backend_template/models"
 	"github.com/gin-gonic/gin"
 )
 

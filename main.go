@@ -1,11 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
-	"github.com/asdutoit/gotraining/section11/db"
-	"github.com/asdutoit/gotraining/section11/routes"
+	"github.com/asdutoit/go_backend_template/db"
+	"github.com/asdutoit/go_backend_template/routes"
 )
 
 func main() {
@@ -26,6 +27,7 @@ func checkEnv() {
 		if os.Getenv(envVar) == "" {
 			missingVars = append(missingVars, envVar)
 		}
+		fmt.Println(os.Getenv(envVar))
 	}
 	if len(missingVars) > 0 {
 		log.Fatalf("Missing environment variables: %v", missingVars)
