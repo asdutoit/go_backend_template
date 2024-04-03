@@ -23,6 +23,8 @@ func SetupRouter() *gin.Engine {
 	r.POST("/events", middlewares.Authenticate, createEvent)
 	r.GET("/deployments", getDeployments)
 	r.GET("/deployment", GetDeploymentByQuery)
+	r.GET("/auth/google", handleGoogleAuth)
+	r.GET("/auth/google/callback", handleGoogleCallback)
 
 	authenticated := r.Group("/")
 	authenticated.Use(middlewares.Authenticate)

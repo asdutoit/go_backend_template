@@ -42,6 +42,7 @@ func InitDB() {
 	fmt.Println("Connected to database")
 
 	createTables()
+	updateTables()
 }
 
 func createTables() {
@@ -50,6 +51,9 @@ func createTables() {
 		id SERIAL PRIMARY KEY,
 		email TEXT NOT NULL UNIQUE,
 		username TEXT,
+		first_name TEXT NOT NULL,
+		last_name TEXT NOT NULL,
+		picture TEXT,
 		password TEXT NOT NULL
 	);
 	`
@@ -93,5 +97,20 @@ func createTables() {
 	if err != nil {
 		panic("Could not create registrations table.")
 	}
+}
 
+func updateTables() {
+	alterUsersTable := `
+	ALTER TABLE users
+	ADD COLUMN IF NOT EXISTS first_name TEXT,
+	ADD COLUMN IF NOT EXISTS last_name TEXT,
+	ADD COLUMN IF NOT EXISTS picture TEXT;
+	`
+
+	_, err := DB.Exec(alterUsersTable)
+
+	if err != nil {
+		fmt.Println("Error altering users table:", err)
+		panic("Could not alter users table.")
+	}
 }
