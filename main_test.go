@@ -8,9 +8,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/asdutoit/gotraining/section11/db"
-	"github.com/asdutoit/gotraining/section11/models"
-	"github.com/asdutoit/gotraining/section11/routes"
+	"github.com/asdutoit/go_backend_template/db"
+	"github.com/asdutoit/go_backend_template/models"
+	"github.com/asdutoit/go_backend_template/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )

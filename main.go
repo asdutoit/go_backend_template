@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/asdutoit/gotraining/section11/db"
-	"github.com/asdutoit/gotraining/section11/routes"
+	"github.com/asdutoit/go_backend_template/db"
+	"github.com/asdutoit/go_backend_template/routes"
 )
 
 func main() {

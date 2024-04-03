@@ -1,17 +1,28 @@
 package routes
 
 import (
-	"github.com/asdutoit/gotraining/section11/middlewares"
+	"github.com/asdutoit/go_backend_template/graphql"
+	"github.com/asdutoit/go_backend_template/middlewares"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
+
+	r.Use(cors.New(config))
+
 	// Add your routes here
 	r.GET("healthcheck", healthCheck)
 	r.POST("/signup", signUp)
 	r.POST("/login", login)
 	r.POST("/events", middlewares.Authenticate, createEvent)
+	r.GET("/deployments", getDeployments)
+	r.GET("/deployment", GetDeploymentByQuery)
 
 	authenticated := r.Group("/")
 	authenticated.Use(middlewares.Authenticate)
@@ -25,6 +36,10 @@ func SetupRouter() *gin.Engine {
 	authenticated.DELETE("/events/:id/register", cancelRegistration)
 	authenticated.POST("/uploads", uploadFiles)
 	authenticated.POST("/deleteUser", deleteUser)
+	r.Any("/graphql", func(c *gin.Context) {
+		h := graphql.NewHandler()
+		h.ContextHandler(c.Request.Context(), c.Writer, c.Request)
+	})
 
 	return r
 }

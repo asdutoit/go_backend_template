@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/asdutoit/gotraining/section11/db"
+	"github.com/asdutoit/go_backend_template/db"
 )
 
 type Event struct {
