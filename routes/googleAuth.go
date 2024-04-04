@@ -2,12 +2,15 @@ package routes
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/asdutoit/go_backend_template/models"
 	"github.com/asdutoit/go_backend_template/utils"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/idtoken"
@@ -84,7 +87,7 @@ func handleGoogleCallback(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"token": jwtToken})
+		RedirectWithCookie(c, jwtToken, token.Expiry, user)
 	} else {
 		user.First_name = givenName.(string)
 		user.Last_name = familyName.(string)
@@ -103,8 +106,47 @@ func handleGoogleCallback(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "could not generate token", "error": err.Error()})
 			return
 		}
+		RedirectWithCookie(c, jwtToken, token.Expiry, user)
+	}
+}
 
-		c.JSON(http.StatusOK, gin.H{"token": jwtToken})
+func RedirectWithCookie(ctx *gin.Context, jwtToken string, expiry time.Time, user *models.User) {
+	// Determine whether we're in a secure environment
+	secureEnv := os.Getenv("SECURE_ENV") == "true"
+
+	// Determine the SameSite mode based on the environment
+	var sameSiteMode http.SameSite
+	if secureEnv {
+		sameSiteMode = http.SameSiteStrictMode
+	} else {
+		sameSiteMode = http.SameSiteLaxMode
 	}
 
+	claims := jwt.MapClaims{
+		"userId":     user.ID,
+		"first_name": user.First_name,
+		"last_name":  user.Last_name,
+		"email":      user.Email,
+		"picture":    user.Picture,
+		"exp":        expiry.Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	ss, err := token.SignedString([]byte(os.Getenv("SECRET")))
+	if err != nil {
+		log.Printf("Err creating token: %v", err)
+		return
+	}
+
+	http.SetCookie(ctx.Writer, &http.Cookie{
+		Name:     "token",
+		Value:    ss,
+		Expires:  expiry,
+		HttpOnly: true,
+		Secure:   secureEnv,
+		SameSite: sameSiteMode,
+		Path:     "/",
+	})
+
+	ctx.Redirect(http.StatusMovedPermanently, os.Getenv("FRONTEND_URL"))
 }

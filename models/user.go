@@ -19,6 +19,15 @@ type User struct {
 	Picture    string
 }
 
+type UserResponse struct {
+	ID         int64
+	Username   string
+	Email      string
+	First_name string
+	Last_name  string
+	Picture    string
+}
+
 func (u *User) Save() error {
 	query := `
 	INSERT INTO users(username, email, password, first_name, last_name, picture) 
@@ -38,7 +47,55 @@ func (u *User) Save() error {
 	return nil
 }
 
+func GetUserById(id int64) (*User, error) {
+	query := `
+	SELECT id, username, email, first_name, last_name, picture
+	FROM users
+	WHERE id = $1`
+
+	row := db.DB.QueryRow(query, id)
+
+	var user User
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.First_name, &user.Last_name, &user.Picture)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// No user was found, return nil for the user
+			return nil, nil
+		} else {
+			// A real error occurred
+			return nil, err
+		}
+	}
+
+	return &user, err
+}
+
 func GetUserByEmail(email string) (*User, error) {
+	query := `
+	SELECT id, username, email, first_name, last_name, picture
+	FROM users
+	WHERE email = $1`
+
+	row := db.DB.QueryRow(query, email)
+
+	var user User
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.First_name, &user.Last_name, &user.Picture)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// No user was found, return nil for the user
+			return nil, nil
+		} else {
+			// A real error occurred
+			return nil, err
+		}
+	}
+
+	return &user, err
+}
+
+func ValidateUserByEmail(email string) (*User, error) {
 	query := `
 	SELECT id, username, email, first_name, last_name, picture, password
 	FROM users
@@ -62,7 +119,7 @@ func GetUserByEmail(email string) (*User, error) {
 	return &user, err
 }
 
-func GetAllUsers() ([]User, error) {
+func GetAllUsers() ([]UserResponse, error) {
 	query := `
 	SELECT id, username, email, first_name, last_name, picture
 	FROM users`
@@ -75,10 +132,10 @@ func GetAllUsers() ([]User, error) {
 
 	defer rows.Close()
 
-	var users []User
+	var users []UserResponse
 
 	for rows.Next() {
-		var user User
+		var user UserResponse
 		err = rows.Scan(&user.ID, &user.Username, &user.Email, &user.First_name, &user.Last_name, &user.Picture)
 		if err != nil {
 			return nil, err
@@ -108,7 +165,7 @@ func (u User) String() string {
 }
 
 func (u *User) ValidateCredentials() (int64, error) {
-	user, err := GetUserByEmail(u.Email)
+	user, err := ValidateUserByEmail(u.Email)
 
 	// Print the user to console
 	fmt.Println(user.String())

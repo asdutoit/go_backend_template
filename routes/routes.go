@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"os"
+
 	"github.com/asdutoit/go_backend_template/graphql"
 	"github.com/asdutoit/go_backend_template/middlewares"
 	"github.com/gin-contrib/cors"
@@ -11,7 +13,13 @@ func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
 	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
+
+	if os.Getenv("ENV") == "production" {
+		config.AllowOrigins = []string{os.Getenv("FRONTEND_URL")}
+	} else {
+		config.AllowAllOrigins = true
+	}
+	config.AllowCredentials = true
 	config.AllowHeaders = append(config.AllowHeaders, "Authorization")
 
 	r.Use(cors.New(config))
@@ -33,8 +41,9 @@ func SetupRouter() *gin.Engine {
 	authenticated.GET("/events/:id", getEvent)
 	authenticated.PUT("/events/:id", updateEvent)
 	authenticated.DELETE("/events/:id", deleteEvent)
-	authenticated.GET("/user", getUsers)
 	authenticated.POST("/events/:id/register", registerForEvent)
+	authenticated.GET("/users", getUsers)
+	authenticated.GET("/user", getUser)
 	authenticated.DELETE("/events/:id/register", cancelRegistration)
 	authenticated.POST("/uploads", uploadFiles)
 	authenticated.POST("/deleteUser", deleteUser)

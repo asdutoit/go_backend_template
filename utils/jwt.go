@@ -2,13 +2,13 @@ package utils
 
 import (
 	"errors"
-	"fmt"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
-const secretKey = "superSecret"
+var secretKey = os.Getenv("SECRET")
 
 func GenerateToken(email string, userId int64) (string, error) {
 	// Generate a token
@@ -45,7 +45,6 @@ func ValidateToken(tokenString string) (int64, error) {
 
 	// email := claims["email"].(string)
 	userId := int64(claims["userId"].(float64))
-	fmt.Println("userId", userId)
 	tokenIsValid := token.Valid
 
 	if !tokenIsValid {

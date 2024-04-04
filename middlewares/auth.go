@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/asdutoit/go_backend_template/utils"
@@ -9,6 +10,7 @@ import (
 
 func Authenticate(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("Authorization")
+	fmt.Println(token)
 
 	if token == "" {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Authorization token required"})
