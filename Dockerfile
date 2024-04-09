@@ -23,7 +23,7 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 
 # This is the architecture you’re building for, which is passed in by the builder.
 # Placing it here allows the previous steps to be cached across architectures.
-ARG TARGETARCH
+ARG TARGETARCH TARGETOS
 
 # Build the application.
 # Leverage a cache mount to /go/pkg/mod/ to speed up subsequent builds.
@@ -31,7 +31,7 @@ ARG TARGETARCH
 # source code into the container.
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,target=. \
-    CGO_ENABLED=0 GOARCH="$TARGETARCH" go build -o /bin/server .
+    CGO_ENABLED=0 GOOS="$TARGETOS" GOARCH="$TARGETARCH" go build -o /bin/server .
 
 ################################################################################
 # Create a new stage for running the application that contains the minimal
@@ -74,6 +74,6 @@ COPY --from=build /bin/server /bin/
 
 # Expose the port that the application listens on.
 EXPOSE 8080
-
+HEALTHCHECK CMD curl --fail http://localhost:8080/healthcheck || exit 1
 # What the container should run when it is started.
 ENTRYPOINT [ "/bin/server" ]

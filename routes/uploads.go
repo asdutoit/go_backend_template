@@ -18,7 +18,7 @@ import (
 
 func uploadFiles(ctx *gin.Context) {
 	region := os.Getenv("AWS_REGION")
-
+	fmt.Println("1")
 	sess, err := session.NewSession(&aws.Config{
 		Region: aws.String(region),
 	})
@@ -29,16 +29,20 @@ func uploadFiles(ctx *gin.Context) {
 	svc := s3.New(sess)
 
 	bucket := os.Getenv("AWS_S3_BUCKET")
+	fmt.Println("2")
 
-	err = ctx.Request.ParseMultipartForm(10 << 20) // 10 MB limit
+	err = ctx.Request.ParseMultipartForm(30 << 20) // 10 MB limit
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	fmt.Println("3")
 	// Get all files from the form
 	form := ctx.Request.MultipartForm
 	files := form.File["files"]
+
+	fmt.Println("4")
 
 	fmt.Println("Uploading", len(files), "files")
 	fmt.Println("Uploading files", files)

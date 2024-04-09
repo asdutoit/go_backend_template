@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/asdutoit/go_backend_template/db"
@@ -25,8 +24,6 @@ func GetAllDeployments() ([]Deployment, error) {
 	query := `SELECT * FROM releases`
 
 	rows, err := db.DB.Query(query)
-
-	fmt.Println("rows", rows)
 
 	if err != nil {
 		return nil, err

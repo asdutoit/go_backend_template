@@ -39,7 +39,7 @@ func InitDB() {
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
 
-	fmt.Println("Connected to database")
+	fmt.Println("================== Connected to database ==================")
 
 	createTables()
 	updateTables()

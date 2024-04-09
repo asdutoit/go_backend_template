@@ -1,0 +1,14 @@
+# apiVersion: monitoring.coreos.com/v1
+# kind: ServiceMonitor
+# metadata:
+#   name: test-backend-servicemonitor
+#   namespace: default
+#   labels:
+#     app: test-backend
+# spec:
+#   endpoints:
+#     - interval: 30s
+#       port: 8080
+#   selector:
+#     matchLabels:
+#       app: test-backend

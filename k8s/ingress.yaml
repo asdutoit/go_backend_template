@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-backend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "64m"
+    cert-manager.io/cluster-issuer: letsencrypt-dns01-prod-cluster
+    cert-manager.io/subject-organizations: "Span Digital"
+    external-dns.alpha.kubernetes.io/hostname: test-backend.dev.spandigital.io
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - test-backend.dev.spandigital.io
+      secretName: test-backend-dev-spandigital-io-key-pair
+  rules:
+    - host: test-backend.dev.spandigital.io
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: test-backend-service
+                port:
+                  number: 8080

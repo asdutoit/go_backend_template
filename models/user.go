@@ -167,9 +167,6 @@ func (u User) String() string {
 func (u *User) ValidateCredentials() (int64, error) {
 	user, err := ValidateUserByEmail(u.Email)
 
-	// Print the user to console
-	fmt.Println(user.String())
-
 	if err != nil {
 		return 0, err
 	}

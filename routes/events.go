@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -70,8 +69,6 @@ func updateEvent(ctx *gin.Context) {
 
 	userId := ctx.GetInt64("userId")
 	event, err := models.GetEventByID(eventId)
-	fmt.Println("userId", userId)
-	fmt.Println("event user", event.UserID)
 
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": "event not found"})
