@@ -16,13 +16,13 @@ These instructions will get you a copy of the project up and running on your loc
 1. Clone the repository
 
 ```bash
-git clone https://github.com/asdutoit/go_training.git
+git clone https://github.com/asdutoit/go_backend_template.git
 ```
 
 2. Change into the project directory
 
 ```bash
-cd go_training
+cd go_backend_template
 ```
 
 3. Install the dependencies
